@@ -1,0 +1,36 @@
+#include "iostream"
+
+int linearsearch(int arr[],int arraysize ,int key){
+
+    for(int i=0; i<  arraysize ; i++){
+
+        if(arr[i]==key){
+
+            return i;
+
+        }
+    }
+    return -1;
+}
+    
+int main(){
+
+    int myArray[]={10,20,30,40,50,60,70,80,90};
+    int key=0;
+    printf("Please enter number to search:");
+    scanf("%d",&key);
+
+    int arraysize = sizeof myArray/sizeof myArray[0];
+
+    int foundindex = linearsearch(myArray,arraysize,key);
+
+    if(foundindex != -1){
+
+        printf("found number at index: %d",foundindex);
+    }else{
+
+        printf("we can`t found number:");
+    }
+    
+    return 0;
+}
