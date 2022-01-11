@@ -1,0 +1,50 @@
+#include "stdio.h"
+#include "cmath"
+
+int jumpsearch(int arr[],int arrsize,int key){
+
+    int start=0;
+    int jumpsize = sqrt(arrsize);
+
+    while(arr[jumpsize] <= key && jumpsize < arrsize){
+
+        start = jumpsize;
+
+        jumpsize += sqrt(arrsize);
+
+        if (jumpsize > arrsize-1){   // for exceeding limit of array
+
+            jumpsize = arrsize;
+        }
+    }
+    for(int i=start ; i< jumpsize ; i++){
+
+        if(arr[i]==key){
+
+            return i;
+        }
+    }
+    return -1;
+}
+int main(){
+
+    int myarray[]={10,20,30,40,50,57,68,78,84,95};
+    int key=0;
+    printf("Please enter number to search:");
+    scanf("%d",&key);
+
+    int arrsize = sizeof myarray/sizeof myarray[0];
+
+    int foundindex = jumpsearch(myarray,arrsize,key);
+
+    if(foundindex!= -1){
+
+        printf("found number at index: %d",foundindex);
+
+    }else {
+
+        printf("we cannot found number!!");
+    }
+
+    return 0;
+}
