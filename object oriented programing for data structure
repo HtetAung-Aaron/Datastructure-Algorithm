@@ -1,0 +1,58 @@
+#include "iostream"
+using namespace std;
+
+class Person{
+
+private:
+    int no1;
+    int no2;
+    int no3;
+
+public:
+    string name;
+    int insertingData(int a,int b,int c);
+    int adding();
+    int sub();
+    int multi();
+
+};
+int Person::insertingData(int a,int b,int c) {
+    no1=a;
+    no2=b;
+    no3=c;
+
+}
+int Person::adding() {
+
+    return no1+no2+no3;
+}
+int Person::sub() {
+
+    return no1-no2-no3;
+}
+int Person::multi() {
+
+    return no1*no2*no3;
+}
+
+int main(){
+    Person p1;
+    int a,b,c;
+    cout<< "enter first number"<<endl;
+    cin>>a;
+    cout<< "enter second number"<<endl;
+    cin>>b;
+    cout<<"enter third number"<<endl;
+    cin>>c;
+
+    p1.insertingData(a,b,c);
+    int add=p1.adding();
+    int multi=p1.multi();
+    int sub=p1.sub();
+
+    cout<<"adding ="<<add<< endl;
+    cout<<"sub ="<<sub<<endl;
+    cout<<"multi ="<<multi<<endl;
+
+    return 0;
+}
