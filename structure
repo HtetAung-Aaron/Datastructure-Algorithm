@@ -1,0 +1,22 @@
+#include "stdio.h"
+#include "string.h"
+struct Person{
+    int age;
+    float height;
+    char name[10];
+    int birthday;
+}person1;
+int main(){
+
+    strcpy(person1.name,"Aaron");
+    person1.height = 5.8;
+    person1.age = 23;
+    person1.birthday = 1999;
+
+    printf("name of person = %s\n",person1.name);
+    printf("age of person = %d\n",person1.age);
+    printf("height of person =%f\n",person1.height);
+    printf("birthday of person = %d\n",person1.birthday);
+
+    return 0;
+}
