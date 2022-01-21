@@ -1,0 +1,51 @@
+#include"iostream"
+using namespace std;
+
+class Node{
+public:
+
+    int data;
+    char name ;
+    Node* next;
+
+
+};
+
+void print(Node* node){
+
+    while(node != NULL){
+
+        cout<< node-> data << endl;
+        node = node-> next;
+    }
+
+
+
+}
+
+main(){
+
+    Node*head = NULL;
+    Node*body = NULL;
+    Node*tail = NULL;
+
+   head = new Node();
+   body = new Node();
+   tail = new Node();
+
+   head->data = 1;
+   head->next = body;
+
+    body->data = 2;
+    body->next = tail;
+
+    tail->data = 3;
+    tail->next = NULL;
+
+    cout<<"Here is your data:"<<endl;
+    print(head);
+
+
+
+    return 0;
+}
