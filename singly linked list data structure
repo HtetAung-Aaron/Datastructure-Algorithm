@@ -1,0 +1,226 @@
+
+#include"iostream"
+using namespace std;
+
+class Node{
+
+public:
+
+    int data;
+    Node* next;
+
+
+};
+
+void print(Node* node) {
+
+    while(node != NULL){
+
+        cout<< node-> data << endl;
+        node = node-> next;
+    }
+
+}
+
+
+void push (Node** head_ref,int new_data){
+
+    Node* new_node = new Node();
+    new_node->data = new_data;
+
+    new_node->next =(*head_ref);
+    (*head_ref)= new_node;
+
+
+}
+
+void append(Node**head_ref,int new_data){
+
+    Node* new_node = new Node();
+    new_node->data = new_data;
+    new_node->next = NULL;
+
+    Node*last = *head_ref;
+
+    if (*head_ref==NULL){
+
+        *head_ref = new_node;
+    }
+    while(last->next != NULL){
+
+        last = last->next;
+    }
+    last->next = new_node;
+
+}
+
+void insertAfter(Node* prev_node,int new_data){
+
+    Node* new_node = new Node();
+    new_node->data = new_data;
+
+    new_node->next = prev_node->next;
+    prev_node->next = new_node;
+
+
+}
+
+bool search(Node* head,int key){
+
+    Node*currentNode = head;
+
+    while(currentNode != NULL){
+
+        if(currentNode->data == key){
+
+            return true;
+        }
+        currentNode= currentNode->next;
+    }
+    return false;
+}
+
+void deleteNode(Node**head_ref,int key){
+
+    Node*temp = *head_ref;
+    Node*prev = NULL;
+
+    if(temp != NULL && temp->data==key){
+
+        *head_ref = temp->next;
+        delete temp;
+
+        return;
+
+    }else{
+        while(temp != NULL && temp->data!=key){
+
+            prev = temp;
+            temp = temp->next;
+
+        }
+        if (temp == NULL){
+
+
+            prev->next = temp->next;
+            delete temp;
+
+            return;
+
+        }
+
+    }
+
+}
+
+main(){
+
+    int key=0;
+    int user_number=0;
+    int key2 =0;
+
+    Node *head = NULL;
+    Node *body = NULL;
+    Node *tail = NULL;
+
+
+    head = new Node();
+    body = new Node();
+    tail = new Node();
+
+    head->data = 10;
+    head->next = body;
+
+    body->data = 20;
+    body->next = tail;
+
+    tail->data = 30;
+    tail->next = NULL;
+
+
+    while(user_number != -1) {
+
+        cout << "Please enter ur method to test the program" << endl;
+        cout << "1. push" << endl;
+        cout << "2. append" << endl;
+        cout << "3. insertAfter" << endl;
+        cout << "4. print" << endl;
+        cout << "5. search" << endl;
+        cout << "6. delete" << endl;
+
+        cin>>user_number;
+
+        if(user_number==1){
+
+            cout << "PLease enter ur push number:" << endl;
+            cin >> key;
+
+            push(&head, key);
+            cout << "Here is your data after push:" << endl;
+            print(head);
+
+
+        }else if(user_number==2){
+
+            cout << "Please enter ur append number:" << endl;
+            cin >> key;
+
+            append(&head, key);
+            cout << "Here is ur data after append:" << endl;
+            print(head);
+
+        }else if(user_number==3){
+
+            cout << "Please enter ur insert number:" << endl;
+            cin >> key;
+
+            cout<< "Please choose 1 or 2 to insert number between"<<endl;
+            cin>> key2;
+
+            if(key2==1){
+                insertAfter(head,key);
+                cout<<"Here is ur data after inserting "<<endl;
+                print(head);
+
+            }else(key2=2);
+                insertAfter(body,key);
+                cout<<"Here is ur data after inserting "<<endl;
+                print(head);
+
+
+        }else if(user_number==4){
+
+            cout << "Here is your data:" << endl;
+            print(head);
+
+        }else if (user_number==5) {
+
+            cout<<"Please enter ur search number:"<<endl;
+            cin>>key;
+
+            bool flag = search(head, key);
+            if (flag==true){
+                cout<<"we found ur search number:"<<key<<endl;
+            }else{
+                cout<<"we did nout found ur search number:"<<endl;
+            }
+
+        }else if(user_number==6){
+
+            cout<<"PLease enter a number u want to delete from program:"<<endl;
+            cin>>key;
+
+            deleteNode(&head,key);
+
+            cout<<"After deleteing ur number from program"<<endl;
+            print(head);
+
+
+        }
+
+
+
+    }
+
+    return 0;
+}
