@@ -1,0 +1,114 @@
+struct Node{
+
+    int data;
+    struct  Node *next;
+
+
+}*top=NULL;
+struct Node *end=NULL;
+
+void push(int);
+void display(struct Node *);
+void pop_and_display();
+void search(int);
+struct Node *append(struct Node *,struct Node *);
+void freeNumber(struct Node *);
+void searchNumber(struct Node *,int);
+
+void display(struct Node *start)
+{
+    if (start==NULL){
+
+        printf("stack is empty \n");
+
+    }
+    else{
+        struct Node *ptr=start;
+        printf("Data in your stack.\n");
+        while(ptr!=NULL)
+        {
+            printf("%d\n",ptr->data);
+            ptr=ptr->next;
+        }
+    }
+}
+void pop_and_display(){
+
+    if (top==NULL){
+
+        printf("stack is empty \n");
+
+    }
+    else{
+
+        freeNumber(top);
+    }
+}
+
+
+void push(int value){
+
+    struct Node *newNode = NULL;
+
+    newNode = (struct Node*)malloc (sizeof (struct Node));
+    newNode->data = value;
+    newNode->next=NULL;
+
+    if (top==NULL){
+
+        top=newNode;
+        end=top;
+
+
+    } else
+
+    {
+        end=append(end,newNode);
+    }
+    printf("inserting success\n");
+
+}
+void search(int number)
+{
+    searchNumber(top,number);
+}
+
+struct Node *append(struct Node *end, struct Node *newNode)
+{
+    end->next=newNode;
+    return newNode;
+}
+
+void freeNumber(struct Node *start)
+{
+    struct Node *ptr=start;
+    struct Node *tmp;
+    while(ptr!=NULL)
+    {
+        printf("Deleted data is %d.\n",ptr->data);
+        tmp=ptr->next;
+        free(ptr);
+        ptr=tmp;
+    }
+
+}
+void searchNumber(struct Node *start,int number)
+{
+    struct Node *ptr=start;
+    int checkpoint=0;
+    while(ptr!=NULL)
+    {
+        if(ptr->data==number)
+        {
+            printf("Entered number is found which is  %d.\n",number);
+            checkpoint=1;
+        }
+        ptr=ptr->next;
+    }
+
+    if(checkpoint==0)
+    {
+        printf("No equal number is found.\n");
+    }
+
+}
