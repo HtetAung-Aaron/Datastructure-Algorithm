@@ -1,3 +1,7 @@
+
+// header file for linkedlist array DS
+// save file as linklistarray.h 
+
 struct Node{
 
     int data;
