@@ -1,0 +1,195 @@
+#include <iostream>
+using namespace std;
+
+struct Node{
+
+   int  data;
+   struct Node*left,*right;
+   Node(int data){
+       this ->data = data;
+       left = right = NULL;
+   }
+
+};
+
+// function to check the depth of the tree between nodes
+int depth( struct Node*node){
+    int d = 0;
+    while(node != NULL){
+        d++;
+        node= node->left;
+    }
+    return d;
+
+}
+
+// function to count nodes
+
+int nodes(struct Node*root){
+
+    if (root == NULL){
+        return (0);
+    }
+    return  ( 1+ nodes(root->left)+ nodes(root->right));
+
+}
+
+// left root right
+
+void inorder(struct Node*node){
+
+    if (node == NULL){
+
+        return;
+    }
+    inorder(node->left);
+    cout<<node->data << "->";
+    inorder(node->right);
+
+}
+
+// root left right
+
+void preorder(struct Node*node){
+
+    if (node == NULL){
+        return;
+    }
+    cout<<node->data<<"->";
+    preorder(node->left);
+    preorder(node->right);
+
+}
+
+// left right root
+
+void  postorder(struct Node*node){
+
+    if(node==NULL){
+
+        return;
+    }
+    postorder(node->left);
+    postorder(node->right);
+    cout << node->data<<"->";
+
+}
+
+// check if BST is full
+// internal node =>2 child or no child at all (algorithm)
+bool isFullbinarytree(struct Node*root){
+
+    if (root == NULL)
+
+        return true;
+
+    if (root->right == NULL && root->left == NULL)
+
+        return true;
+
+
+    if ((root->right) && (root->left))
+
+        return isFullbinarytree(root->left) &&
+                isFullbinarytree(root->right);
+
+    return false;
+}
+
+// 3 parameter -> root , index , number of Nodes
+// index >= number of Nodes -> terminating point of recursive function (return false)
+// recursive -> 2*index + 1 or 2 couz every Nodes has 2 internal child
+
+bool checkcomplete(struct Node*root,int index,int numNodes){
+
+    if (root == NULL)
+        return true;
+
+    if (index >= numNodes)
+        return false;
+
+    return (checkcomplete(root->left,2*index + 1, numNodes) &&
+            checkcomplete(root->right, 2*index + 2,numNodes));
+
+}
+
+// 3 parameter -> root , depth , level
+// root -> left && right == NUll  (return true)
+// root -> left || right == NUll   (return false)
+// recursive => root->left (right) , d, level+1
+
+bool isPerfect(struct Node*root, int d, int level=0){
+
+    if (root == NULL)
+        return true;
+
+    if (root->left == NULL && root->right == NULL)
+        return( d == level+1);
+
+    if (root->left == NULL || root->right == NULL)
+        return false;
+
+    return isPerfect(root->left,d,level+1)&&
+            isPerfect(root->right,d,level+1);
+
+}
+
+// function to find depth of the tree
+// root -> d 
+// recursive (root,d)
+bool isPerfect (Node*root){
+
+    int d = depth(root);
+    return isPerfect(root,d);
+
+}
+
+
+
+int main() {
+
+    struct Node*root = NULL;
+    root = new Node (8);
+    root->left = new Node (10);
+    root->right = new Node (3);
+
+    root->right->left = new Node (17);
+    root->right->right = new Node(12);
+    root->left->left = new Node(4);
+    root->left->right = new Node(2);
+
+
+    // variables for counting number of Nodes and index
+    int index=0;
+    int numNodes = nodes(root);
+
+    cout<<"Inorder Traversal:";
+    inorder (root);
+
+    cout<<"\nPreorder Traversal:";
+    preorder(root);
+
+    cout<<"\nPostorder Traversal:";
+    postorder(root);
+
+  if  (isFullbinarytree(root))
+        cout<<"\nIs Full Binary Tree\n";
+  else
+      cout << "\nIs not Full Binary tree";
+
+
+  if (checkcomplete(root,index,numNodes))
+      cout<<"Is Complete Binary tree\n";
+  else
+      cout<<"Is not Complete Binary tree\n";
+
+
+  if (isPerfect(root))
+      cout<<"Is Perfect Binary tree\n";
+  else
+      cout<< "Is not Perfect Binary tree\n";
+
+
+
+    return 0;
+}
