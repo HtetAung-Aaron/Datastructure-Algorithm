@@ -97,8 +97,9 @@ bool isFullbinarytree(struct Node*root){
 }
 
 // 3 parameter -> root , index , number of Nodes
+// root == NULL (return true)
 // index >= number of Nodes -> terminating point of recursive function (return false)
-// recursive -> 2*index + 1 or 2 couz every Nodes has 2 internal child
+// recursive -> 2*index + 1 or 2 couz every Nodes has 2 internal child (algorithm)
 
 bool checkcomplete(struct Node*root,int index,int numNodes){
 
@@ -114,9 +115,10 @@ bool checkcomplete(struct Node*root,int index,int numNodes){
 }
 
 // 3 parameter -> root , depth , level
+// root == NULL (return true)
 // root -> left && right == NUll  (return true)
 // root -> left || right == NUll   (return false)
-// recursive => root->left (right) , d, level+1
+// recursive => root->left,root->right , d, level+1 (algorithm)
 
 bool isPerfect(struct Node*root, int d, int level=0){
 
