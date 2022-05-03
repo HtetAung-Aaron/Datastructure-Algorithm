@@ -1,0 +1,48 @@
+
+class Data:
+    def __init__(self,name,pw):
+        self.name = None
+        self.pw = None
+        self.d_left = None
+        self.d_right = None
+
+class Length:
+    def __init__(self):
+        self.id = length
+        self.data = Data(name,pw)
+        self.left = self.right = None
+
+class Char:
+    def __init__(self,char):
+        self.char = char
+        #self.length = Length(length,name,pw)
+        self.left = self.right = None
+
+def insert(node,char):
+    if node is None:
+        return Char(char)
+
+    else:
+        if char < node.char:
+            node.left = insert(node.left,char)
+            return node
+        elif char > node.char:
+            node.right = insert(node.right,char)
+            return node
+
+
+def inorder(root):
+    if root is not None:
+        inorder(root.left)
+        print((root.char) + '->', end=' ')
+        inorder(root.right)
+
+
+if __name__ == "__main__":
+    root = None
+    charlist = ['p','h','d','b','a','c','f','e','g','l','j','n','i','k','m','o','t','r','x','q','s','v','y','u','w','z']
+    for i in charlist:
+        root = insert(root,i)
+
+    print(inorder(root))
+
