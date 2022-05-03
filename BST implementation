@@ -22,13 +22,13 @@ def insert(node,char):
     if node is None:
         return Char(char)
 
-    else:
-        if char < node.char:
-            node.left = insert(node.left,char)
-            return node
-        elif char > node.char:
-            node.right = insert(node.right,char)
-            return node
+    
+    elif char < node.char:
+        node.left = insert(node.left,char)
+        return node
+    elif char > node.char:
+        node.right = insert(node.right,char)
+        return node
 
 
 def inorder(root):
