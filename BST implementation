@@ -3,8 +3,8 @@ class Data:
     def __init__(self,name,pw):
         self.name = None
         self.pw = None
-        self.d_left = None
-        self.d_right = None
+        self.left = None
+        self.right = None
 
 class Length:
     def __init__(self):
@@ -22,7 +22,6 @@ def insert(node,char):
     if node is None:
         return Char(char)
 
-    
     elif char < node.char:
         node.left = insert(node.left,char)
         return node
@@ -37,6 +36,19 @@ def inorder(root):
         print((root.char) + '->', end=' ')
         inorder(root.right)
 
+def searching(root,_O_):
+    if root is not None:
+        currentValue = ord(root.char)
+        incomeValue = ord(_O_)
+
+        print(currentValue, incomeValue)
+        if currentValue == incomeValue:
+            print("work here")
+            return True
+        elif currentValue < incomeValue:
+            searching(root.right,_O_)
+        elif currentValue > incomeValue:
+            searching(root.left,_O_)
 
 if __name__ == "__main__":
     root = None
@@ -45,4 +57,13 @@ if __name__ == "__main__":
         root = insert(root,i)
 
     print(inorder(root))
+    while True:
+        name = input("Please enter username:")
+        _O_  = name[0]
+        print(_O_)
+        flag = searching(root,_O_)
+        if flag:
+            print("found")
+        else:
+            print("not found")
 
