@@ -43,7 +43,7 @@ def searching(root,_O_):
 
         print(currentValue, incomeValue)
         if currentValue == incomeValue:
-            print("work here")
+            print("found data")
             return True
         elif currentValue < incomeValue:
             searching(root.right,_O_)
@@ -59,11 +59,9 @@ if __name__ == "__main__":
     print(inorder(root))
     while True:
         name = input("Please enter username:")
+        name = name.lower()
         _O_  = name[0]
         print(_O_)
         flag = searching(root,_O_)
-        if flag:
-            print("found")
-        else:
-            print("not found")
+
 
