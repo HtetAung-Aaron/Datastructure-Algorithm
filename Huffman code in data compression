@@ -1,0 +1,86 @@
+#include <iostream>
+#include <string>
+#include <unordered_map>
+#include <queue>
+
+// Define a struct for a node in the Huffman tree
+struct Node {
+    char character;
+    int frequency;
+    Node *left, *right;
+
+    // Overload the < operator to use the priority queue
+    bool operator<(const Node &other) const {
+        return frequency > other.frequency;
+    }
+};
+
+// Encode the data using the Huffman codes
+std::unordered_map<char, std::string> encode(const std::string &data) {
+    // Count the frequency of each character in the data
+    std::unordered_map<char, int> freq;
+    for (const char &c : data) {
+        freq[c]++;
+    }
+
+    // Create a priority queue of nodes
+    std::priority_queue<Node> heap;
+    for (const auto &[c, f] : freq) {
+        heap.push({c, f, nullptr, nullptr});
+    }
+
+    // Build the Huffman tree
+    while (heap.size() > 1) {
+        Node left = heap.top();
+        heap.pop();
+        Node right = heap.top();
+        heap.pop();
+
+        Node parent{'\0', left.frequency + right.frequency, new Node(left), new Node(right)};
+        heap.push(parent);
+    }
+
+    // Generate the Huffman codes for each character
+    std::unordered_map<char, std::string> codes;
+    std::function<void(Node *, std::string)> generate_codes;
+    generate_codes = [&](Node *node, std::string code) {
+        if (!node->left && !node->right) {
+            codes[node->character] = code;
+        } else {
+            generate_codes(node->left, code + "0");
+            generate_codes(node->right, code + "1");
+        }
+    };
+    generate_codes(&heap.top(), "");
+
+    return codes;
+}
+
+// Decode the encoded data using the Huffman codes
+std::string decode(const std::string &encoded_data, const std::unordered_map<char, std::string> &codes) {
+    std::string decoded_data;
+    std::string code;
+    for (const char &c : encoded_data) {
+        code += c;
+        for (const auto &[character, huffman_code] : codes) {
+            if (code == huffman_code) {
+                decoded_data += character;
+                code.clear();
+                break;
+            }
+        }
+    }
+    return decoded_data;
+}
+
+int main() {
+    std::string data = "this is an example";
+
+    auto codes = encode(data);
+    std::string encoded_data;
+    for (const char &c : data) {
+        encoded_data += codes[c];
+    }
+
+    std::cout << "Original data: " << data << std::endl;
+    std::cout << "Encoded data
