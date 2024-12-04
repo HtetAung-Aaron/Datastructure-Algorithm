@@ -1,0 +1,206 @@
+"""
+    This stock inventory management system is implemented using binary search tree.
+    This program is used to the performance comparison of various data structure in space and time complexity.
+    This is just an example program, not a complete set of program, as it needed further implementation.
+"""
+
+
+class BSTNode:
+    def __init__(self, product_id, details):
+        self.product_id = product_id
+        self.details = details
+        self.left = None
+        self.right = None
+
+
+class ProductBST:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, product_id, details):
+        try:                                    # insert product into binary search tree
+            if not self.root:
+                self.root = BSTNode(product_id, details)
+            else:
+                self._insert_recursive(self.root, product_id, details)
+        except Exception as e:
+            print(f"Error inserting product: {e}")
+
+    def _insert_recursive(self, node, product_id, details):
+        if product_id < node.product_id:
+            if node.left:
+                self._insert_recursive(node.left, product_id, details)
+            else:
+                node.left = BSTNode(product_id, details)
+        else:
+            if node.right:
+                self._insert_recursive(node.right, product_id, details)
+            else:
+                node.right = BSTNode(product_id, details)
+
+    def search(self, product_id):
+        try:
+            return self._search_recursive(self.root, product_id)
+        except Exception as e:
+            print(f"Error searching for product: {e}")
+            return None
+
+    def in_order_traversal(self, node=None, result=None):    # inorder traversal to get sorted element
+        if result is None:
+            result = []
+        if node is None:
+            node = self.root
+        if node.left:
+            self.in_order_traversal(node.left, result)
+        result.append((node.product_id, node.details))
+        if node.right:
+            self.in_order_traversal(node.right, result)
+        return result
+
+    def _search_recursive(self, node, product_id):
+        if not node:
+            return None
+        if product_id == node.product_id:
+            return node.details
+        elif product_id < node.product_id:
+            return self._search_recursive(node.left, product_id)
+        else:
+            return self._search_recursive(node.right, product_id)
+
+    def sell_product(self, product_id, quantity):  # Sell a product and update inventory
+        try:
+            product = self.search(product_id)
+            if not product:
+                raise KeyError("Product not found.")
+            if product["stock"] < quantity:
+                raise ValueError(f"Insufficient stock for {product['name']}. Only {product['stock']} left.")
+            product["stock"] -= quantity
+            sale_price = quantity * product["price"] * (1 - product["discount"] / 100)
+            print(f"Sold {quantity} of {product['name']} for ${sale_price:.2f}")
+            print("------------------------------------")
+            return sale_price
+        except KeyError as e:
+            print(f"Error: {e}")
+        except ValueError as e:
+            print(f"Error: {e}")
+        except Exception as e:
+            print(f"Unexpected error during sale: {e}")
+        return 0
+
+    def apply_discount(self, product_id, discount_percentage):  # Apply discount to a product
+        try:
+            product = self.search(product_id)
+            if not product:
+                raise KeyError("Product not found.")
+            if not (0 <= discount_percentage <= 100):
+                raise ValueError("Discount percentage must be between 0 and 100.")
+            product["discount"] = discount_percentage
+            print(f"Discount of {discount_percentage}% applied to {product['name']}.")
+            print("------------------------------------")
+        except KeyError as e:
+            print(f"Error: {e}")
+        except ValueError as e:
+            print(f"Error: {e}")
+        except Exception as e:
+            print(f"Unexpected error while applying discount: {e}")
+
+    def restocking_list(self):  # Generate restocking list based on stock level
+        try:
+            restock_list = [
+                (product_id, details["name"], details["stock"])
+                for product_id, details in self.in_order_traversal(self.root)
+                if details["stock"] < details["reorder_level"]
+            ]
+            if restock_list:
+                print("Products that need restocking:")
+                print("------------------------------------")
+                for product_id, name, stock in restock_list:
+                    print(f"  * {name} (ID: {product_id}) - Available stock: {stock}")
+            else:
+                print("No products need restocking.")
+        except Exception as e:
+            print(f"Error generating restocking list: {e}")
+
+    def generate_sales_report(self, sales):  # Generate end-of-day sales report
+        try:
+            total_revenue = sum(sale["total_price"] for sale in sales)
+            category_sales = {}
+            product_sales = {}
+
+            for sale in sales:
+                product = self.search(sale["product_id"])
+                if not product:
+                    raise KeyError(f"Product with ID {sale['product_id']} not found.")
+                category = product["category"]
+                category_sales[category] = category_sales.get(category, 0) + sale["total_price"]
+                product_sales[product["name"]] = product_sales.get(product["name"], 0) + sale["quantity"]
+
+            most_sold = max(product_sales, key=product_sales.get, default=None)
+            least_sold = min(product_sales, key=product_sales.get, default=None)
+
+            print("\nEnd-of-Day Sales Report")
+            print("------------------------------------")
+            print(f"Total Revenue: ${total_revenue:.2f}")
+            print("Sales by Category:")
+            for category, revenue in category_sales.items():
+                print(f"  * {category}: ${revenue:.2f}")
+            print(f"Most Sold Product: {most_sold}")
+            print(f"Least Sold Product: {least_sold}")
+        except KeyError as e:
+            print(f"Error: {e}")
+        except Exception as e:
+            print(f"Unexpected error generating sales report: {e}")
+
+
+class StoreInventory:   # Creating an instance of StoreInventory using BST for products
+    def __init__(self):
+        self.products = ProductBST()
+        self.sales = []
+
+    def add_product(self, product_id, name, category, stock, price, reorder_level):
+        self.products.insert(product_id, {
+            "name": name,
+            "category": category,
+            "stock": stock,
+            "price": price,
+            "reorder_level": reorder_level,
+            "discount": 0
+        })
+
+    def sell_product(self, product_id, quantity):
+        sale_price = self.products.sell_product(product_id, quantity)
+        if sale_price > 0:
+            self.sales.append({
+                "product_id": product_id,
+                "quantity": quantity,
+                "total_price": sale_price
+            })
+
+    def apply_discount(self, product_id, discount_percentage):
+        self.products.apply_discount(product_id, discount_percentage)
+
+    def restocking_list(self):
+        self.products.restocking_list()
+
+    def generate_sales_report(self):
+        self.products.generate_sales_report(self.sales)
+
+
+store = StoreInventory()
+
+# Adding products into Binary Search Tree
+store.add_product(1001, "Laptop", "Electronics", 10, 1000, 3)
+store.add_product(1002, "Shirt", "Clothing", 50, 20, 10)
+store.add_product(1003, "Apple", "Food", 100, 1, 20)
+
+# Selling products and updating sales
+store.sell_product(1001, 3)
+store.sell_product(1002, 10)
+
+store.apply_discount(1001, 10)  # Apply 10% discount to product
+
+# Restocking list when low in stock level
+store.restocking_list()
+
+# Generating end-of-day sales report
+store.generate_sales_report()
