@@ -1,0 +1,192 @@
+"""
+    This code is for implementation of inventory management system od store in python languages.
+    To understand the time and space complexity of multiple data structures, this was written in
+    most simple but effective language. There will be two types of program to compare the performance
+    of different data structure.
+
+ Stock Management functions
+ ---------------------------------------------------
+ def add_product():  = Add a new product to the inventory.
+ def sell_product(): = Sell a product and update inventory.
+ def apply_discount(): = Apply a discount to a specific product.
+ def restocking_list(): = Get a list of products that need restocking.
+ def  generate_sales_report(): = Generate an end-of-day sales report.
+ def search_product_by_name(): = Search product by name.
+ def sort_products_by_stock(): = Sort product by number of stock item in ascending order
+
+ """
+
+
+class StoreInventory:
+    def __init__(self):
+        self.products = {}  # Dictionary to store product data
+        self.sales = []  # List to store sales data
+
+    def add_product(self, product_id, name, category, stock, price, reorder_level):
+        try:
+            self.products[product_id] = {
+                "name": name,
+                "category": category,
+                "stock": stock,
+                "price": price,
+                "reorder_level": reorder_level,
+                "discount": 0
+            }
+        except Exception as e:
+            print(f"Error adding product: {e}")
+
+    def sell_product(self, product_id, quantity):
+        try:
+            if product_id not in self.products:
+                raise KeyError("Product not found.")
+            product = self.products[product_id]
+            if product["stock"] < quantity:
+                raise ValueError(f"Insufficient stock for {product['name']}. Available: {product['stock']}")
+            # Update stock and calculate sale price
+            product["stock"] -= quantity
+            sale_price = quantity * product["price"] * (1 - product["discount"] / 100)
+            self.sales.append({
+                "product_id": product_id,
+                "quantity": quantity,
+                "total_price": sale_price
+            })
+            print(f"Sold {quantity} of {product['name']} for ${sale_price:.2f}")
+        except KeyError as e:
+            print(f"Error: {e}")
+        except ValueError as e:
+            print(f"Error: {e}")
+        except Exception as e:
+            print(f"Unexpected error during sale: {e}")
+
+    def apply_discount(self, product_id, discount_percentage):
+        try:
+            if product_id not in self.products:
+                raise KeyError("Product not found.")
+            if not (0 <= discount_percentage <= 100):
+                raise ValueError("Discount percentage must be between 0 and 100.")
+            self.products[product_id]["discount"] = discount_percentage
+            print(f"Discount of {discount_percentage}% applied to {self.products[product_id]['name']}.")
+        except KeyError as e:
+            print(f"Error: {e}")
+        except ValueError as e:
+            print(f"Error: {e}")
+        except Exception as e:
+            print(f"Unexpected error applying discount: {e}")
+
+    def restocking_list(self):
+        try:
+            restock_list = [
+                (product_id, details["name"], details["stock"])
+                for product_id, details in self.products.items()
+                if details["stock"] < details["reorder_level"]
+            ]
+            if restock_list:
+                print("Products that need restocking:")
+                print("------------------------------------")
+                for product_id, name, stock in restock_list:
+                    print(f"  * {name} (ID: {product_id}) - Available stock: {stock}")
+            else:
+                print("No products need restocking.")
+        except Exception as e:
+            print(f"Error generating restocking list: {e}")
+
+    def search_product_by_name(self, search_name):  # Search product by name.
+        try:
+            if not isinstance(search_name, str) or not search_name.strip():
+                raise ValueError("Search name must be a non-empty string.")
+
+            found_products = [
+                (product_id, details)
+                for product_id, details in self.products.items()
+                if search_name.lower() in details["name"].lower()
+            ]
+            if found_products:
+                print("\nSearch Results:")
+                print("------------------------------------")
+                for product_id, details in found_products:
+                    print(
+                        f"  * {details['name']} (ID: {product_id}) - Stock: {details['stock']} - Price: ${details['price']:.2f}")
+            else:
+                print(f"No products found matching '{search_name}'.")
+
+        except ValueError as e:
+            print(f"Error: {e}")
+        except Exception as e:
+            print(f"Unexpected error during search: {e}")
+
+    def sort_products_by_stock(self):  # Sort products by the number of stock items in ascending order.
+        try:
+            if not self.products:
+                raise ValueError("No products available to sort.")
+
+            sorted_products = sorted(self.products.items(), key=lambda item: item[1]['stock'])
+
+            print("\nProducts Sorted by Stock:")
+            print("------------------------------------")
+            for product_id, details in sorted_products:
+                print(f"  * {details['name']} (ID: {product_id}) - Stock: {details['stock']}")
+
+        except ValueError as e:
+            print(f"Error: {e}")
+        except KeyError as e:
+            print(f"Unexpected error accessing product details: {e}")
+        except Exception as e:
+            print(f"Unexpected error during sorting: {e}")
+
+    def generate_sales_report(self):  # Generate an end-of-day sales report.
+        try:
+            total_revenue = sum(sale["total_price"] for sale in self.sales)
+            category_sales = {}
+            product_sales = {}
+
+            for sale in self.sales:
+                product = self.products.get(sale["product_id"])
+                if not product:
+                    raise KeyError(f"Product with ID {sale['product_id']} not found.")
+                category = product["category"]
+                category_sales[category] = category_sales.get(category, 0) + sale["total_price"]
+                product_sales[product["name"]] = product_sales.get(product["name"], 0) + sale["quantity"]
+
+            most_sold = max(product_sales, key=product_sales.get, default=None)
+            least_sold = min(product_sales, key=product_sales.get, default=None)
+
+            print("\nEnd-of-Day Sales Report")
+            print("------------------------------------")
+            print(f"Total Revenue: ${total_revenue:.2f}")
+            print("Sales by Category:")
+            for category, revenue in category_sales.items():
+                print(f"  * {category}: ${revenue:.2f}")
+            print(f"Most Sold Product: {most_sold}")
+            print(f"Least Sold Product: {least_sold}")
+        except KeyError as e:
+            print(f"Error: {e}")
+        except Exception as e:
+            print(f"Unexpected error generating sales report: {e}")
+
+
+store = StoreInventory()
+
+# Adding products into dictionaries
+store.add_product(1001, "Laptop", "Electronics", 10, 1000, 3)
+store.add_product(1002, "Shirt", "Clothing", 50, 20, 10)
+store.add_product(1003, "Apple", "Food", 100, 1, 20)
+
+# Selling products from dictionaries
+store.sell_product(1001, 8)
+store.sell_product(1002, 50)
+store.sell_product(1003, 30)
+
+# Applying discount to product
+store.apply_discount(1001, 10)
+
+# Restocking list when low
+store.restocking_list()
+
+# Generating sales report at the end of the day
+store.generate_sales_report()
+
+# Search by name
+store.search_product_by_name("Shirt")
+
+# Sort by stock
+store.sort_products_by_stock()
