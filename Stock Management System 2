@@ -1,6 +1,6 @@
 """
     This stock inventory management system is implemented using binary search tree.
-    This program is used to the performance comparison of various data structure in space and time complexity.
+    This program is used to  measure the performance comparison of various data structure in space and time complexity.
     This is just an example program, not a complete set of program, as it needed further implementation.
 """
 
